@@ -170,7 +170,7 @@ void ku_pgfault_handler(char va){
 	char * pte;
 	int ptIndex = (va & 0xF0 ) >> 4;
 	pte = ptbr + ptIndex;
-	if(!flag){*pte = -1;return;}
+	if(!flag){*pte = 0;return;}
 	int pa = i << 2;
 	*pte = pa + 2 + 1;
 	FreeList[i] = 1;
