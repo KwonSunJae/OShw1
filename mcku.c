@@ -57,27 +57,33 @@ void ku_run_cpu(void){
 	unsigned char va;
     char sorf;
 	int addr, pa, i;
-
+	
 	do{
 		if(!current)
 			exit(0);
-
+		
 		for( i=0 ; i<TSLICE ; i++){
+			
 			if(fscanf(current->fd, "%d", &addr) == EOF){
-				kuos.exit(current->pid);
+				
+				kuos.exit((char)current->pid);
+
 				break;
 			}
+			
 			va = addr & 0xFF;
+			
 			pa = ku_traverse(va);
-
+			
 			if(pa >= 0){
 				sorf = 'S';
 			}
 			else{
 				/* Generates a page fault */
 				kuos.pgfault(va);
+				
 				pa = ku_traverse(va);
-
+				
 				if(pa < 0){
 					/* No free page frames */
 					kuos.exit(current->pid);
@@ -87,6 +93,7 @@ void ku_run_cpu(void){
 			}
 
 			printf("%d: %d -> %d (%c)\n", current->pid, va, pa, sorf);
+			
 		}
 
 		kuos.sched(current->pid);
